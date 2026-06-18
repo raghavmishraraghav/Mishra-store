@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mishra General Store – Prayagraj</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Hind:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green:   #1a7a4a;
+    --green-d: #145c38;
+    --green-l: #e8f5ee;
+    --saffron: #f4831f;
+    --saffron-l: #fff4eb;
+    --cream:   #fdf8f2;
+    --ink:     #1c1c1c;
+    --muted:   #6b7280;
+    --border:  #e5e7eb;
+    --white:   #ffffff;
+    --radius:  12px;
+    --shadow:  0 2px 12px rgba(0,0,0,.08);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Hind', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.55;
+    padding-bottom: 100px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--green);
+    color: var(--white);
+    padding: 16px 20px 14px;
+    position: sticky; top: 0; z-index: 200;
+    box-shadow: 0 2px 8px rgba(0,0,0,.25);
+  }
+  .header-inner {
+    max-width: 900px; margin: auto;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  }
+  .brand h1 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.35rem; font-weight: 800;
+    line-height: 1.1;
+  }
+  .brand p {
+    font-size: .75rem; opacity: .85; margin-top: 2px;
+  }
+  .cart-btn {
+    background: var(--saffron);
+    color: var(--white);
+    border: none; border-radius: 50px;
+    padding: 9px 18px;
+    font-family: 'Baloo 2', cursive;
+    font-size: .95rem; font-weight: 700;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+    transition: transform .15s, background .15s;
+    white-space: nowrap;
+  }
+  .cart-btn:hover { background: #d96e0c; transform: scale(1.04); }
+  .cart-count {
+    background: var(--white); color: var(--saffron);
+    border-radius: 50%; width: 20px; height: 20px;
+    font-size: .8rem; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ── HERO STRIP ── */
+  .hero {
+    background: linear-gradient(135deg, var(--green-d) 0%, var(--green) 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 28px 20px 24px;
+  }
+  .hero h2 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.6rem; font-weight: 800;
+    margin-bottom: 6px;
+  }
+  .hero p { font-size: .9rem; opacity: .9; }
+  .hero .badges {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    justify-content: center; margin-top: 14px;
+  }
+  .badge {
+    background: rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.35);
+    border-radius: 50px; padding: 4px 14px; font-size: .78rem;
+  }
+
+  /* ── FILTER BAR ── */
+  .filter-bar {
+    max-width: 900px; margin: 20px auto 0;
+    padding: 0 16px;
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .filter-btn {
+    background: var(--white);
+    border: 2px solid var(--border);
+    border-radius: 50px;
+    padding: 6px 16px;
+    font-family: 'Hind', sans-serif;
+    font-size: .85rem; font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    background: var(--green); color: var(--white); border-color: var(--green);
+  }
+
+  /* ── PRODUCT GRID ── */
+  .products-section { max-width: 900px; margin: 18px auto 0; padding: 0 12px; }
+  .section-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--green-d);
+    margin-bottom: 12px; padding-left: 4px;
+  }
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+    gap: 12px;
+  }
+  .product-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    transition: transform .18s, box-shadow .18s;
+  }
+  .product-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,.12); }
+  .product-card.hidden { display: none; }
+  .product-img-wrap {
+    position: relative; width: 100%; padding-top: 80%;
+    background: #f0f0f0; overflow: hidden;
+  }
+  .product-img-wrap img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform .3s;
+  }
+  .product-card:hover .product-img-wrap img { transform: scale(1.05); }
+  .cat-tag {
+    position: absolute; top: 6px; left: 6px;
+    background: var(--green); color: var(--white);
+    font-size: .65rem; font-weight: 600; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 50px;
+  }
+  .product-body { padding: 10px 10px 12px; flex: 1; display: flex; flex-direction: column; }
+  .product-name {
+    font-family: 'Baloo 2', cursive;
+    font-size: .93rem; font-weight: 700;
+    line-height: 1.2; margin-bottom: 3px;
+  }
+  .product-desc { font-size: .75rem; color: var(--muted); margin-bottom: 8px; flex: 1; }
+  .product-price {
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--green-d); margin-bottom: 8px;
+  }
+  .add-btn {
+    width: 100%;
+    background: var(--saffron); color: var(--white);
+    border: none; border-radius: 8px;
+    padding: 7px 0; font-family: 'Baloo 2', cursive;
+    font-size: .9rem; font-weight: 700;
+    cursor: pointer; transition: background .15s, transform .1s;
+  }
+  .add-btn:hover { background: #d96e0c; }
+  .add-btn:active { transform: scale(.97); }
+  .add-btn.added { background: var(--green); }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center; padding: 40px 20px; color: var(--muted);
+    display: none;
+  }
+  .empty-state .icon { font-size: 2.5rem; margin-bottom: 10px; }
+
+  /* ── CART DRAWER ── */
+  .overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 400;
+    background: rgba(0,0,0,.45);
+  }
+  .overlay.open { display: block; }
+  .cart-drawer {
+    position: fixed; bottom: 0; right: 0;
+    width: 100%; max-width: 420px;
+    height: 90vh;
+    background: var(--white);
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -4px 30px rgba(0,0,0,.2);
+    z-index: 500;
+    display: flex; flex-direction: column;
+    transform: translateY(100%);
+    transition: transform .3s cubic-bezier(.4,0,.2,1);
+  }
+  .cart-drawer.open { transform: translateY(0); }
+  .drawer-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .drawer-header h2 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.15rem; font-weight: 800;
+  }
+  .close-btn {
+    background: var(--border); border: none;
+    border-radius: 50%; width: 32px; height: 32px;
+    font-size: 1.1rem; cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+    transition: background .15s;
+  }
+  .close-btn:hover { background: #d1d5db; }
+  .cart-items { flex: 1; overflow-y: auto; padding: 12px 16px; }
+  .cart-empty {
+    text-align: center; padding: 50px 20px; color: var(--muted);
+  }
+  .cart-empty .icon { font-size: 2.5rem; margin-bottom: 10px; }
+  .cart-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+  }
+  .cart-item img {
+    width: 54px; height: 54px; object-fit: cover;
+    border-radius: 8px; flex-shrink: 0;
+  }
+  .ci-info { flex: 1; min-width: 0; }
+  .ci-name {
+    font-family: 'Baloo 2', cursive;
+    font-size: .9rem; font-weight: 700;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .ci-price { font-size: .8rem; color: var(--muted); }
+  .ci-subtotal { font-size: .85rem; font-weight: 700; color: var(--green-d); margin-top: 2px; }
+  .qty-ctrl {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .qty-btn {
+    background: var(--green-l); border: none;
+    border-radius: 6px; width: 28px; height: 28px;
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--green-d); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .12s;
+  }
+  .qty-btn:hover { background: var(--green); color: var(--white); }
+  .qty-num {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1rem; font-weight: 700;
+    min-width: 20px; text-align: center;
+  }
+  .remove-btn {
+    background: none; border: none;
+    color: #dc2626; font-size: 1.1rem;
+    cursor: pointer; padding: 4px; border-radius: 6px;
+    transition: background .12s;
+  }
+  .remove-btn:hover { background: #fee2e2; }
+  .cart-footer {
+    border-top: 2px solid var(--border);
+    padding: 14px 16px;
+  }
+  .total-row {
+    display: flex; justify-content: space-between;
+    margin-bottom: 12px; font-size: 1rem;
+  }
+  .total-row strong {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.2rem; color: var(--green-d);
+  }
+  .checkout-btn {
+    width: 100%;
+    background: var(--green); color: var(--white);
+    border: none; border-radius: 10px;
+    padding: 13px; font-family: 'Baloo 2', cursive;
+    font-size: 1.1rem; font-weight: 800;
+    cursor: pointer; transition: background .15s, transform .1s;
+  }
+  .checkout-btn:hover { background: var(--green-d); }
+  .checkout-btn:active { transform: scale(.98); }
+  .checkout-btn:disabled { background: var(--muted); cursor: not-allowed; }
+
+  /* ── ORDER MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 600;
+    background: rgba(0,0,0,.55);
+    align-items: flex-end; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--white);
+    border-radius: 20px 20px 0 0;
+    width: 100%; max-width: 480px;
+    max-height: 95vh;
+    overflow-y: auto;
+    padding: 24px 20px 32px;
+    animation: slideUp .3s cubic-bezier(.4,0,.2,1);
+  }
+  @keyframes slideUp {
+    from { transform: translateY(60px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+  .modal h2 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.2rem; font-weight: 800;
+    margin-bottom: 18px;
+  }
+  .form-group { margin-bottom: 14px; }
+  label {
+    display: block; font-size: .85rem; font-weight: 600;
+    margin-bottom: 5px; color: var(--ink);
+  }
+  label .req { color: #dc2626; }
+  input, textarea {
+    width: 100%; border: 1.5px solid var(--border);
+    border-radius: 8px; padding: 10px 12px;
+    font-family: 'Hind', sans-serif; font-size: .95rem;
+    transition: border-color .15s;
+    background: var(--cream);
+  }
+  input:focus, textarea:focus {
+    outline: none; border-color: var(--green);
+    background: var(--white);
+  }
+  textarea { resize: vertical; min-height: 70px; }
+  .order-summary-box {
+    background: var(--green-l); border-radius: 10px;
+    padding: 12px 14px; margin-bottom: 16px;
+  }
+  .order-summary-box h3 {
+    font-family: 'Baloo 2', cursive; font-size: .95rem; font-weight: 700;
+    color: var(--green-d); margin-bottom: 8px;
+  }
+  .order-summary-line {
+    display: flex; justify-content: space-between;
+    font-size: .85rem; padding: 2px 0;
+    border-bottom: 1px dashed #c6e0d0;
+  }
+  .order-summary-line:last-child { border-bottom: none; }
+  .order-total-line {
+    display: flex; justify-content: space-between;
+    font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 800;
+    color: var(--green-d); margin-top: 8px; padding-top: 8px;
+    border-top: 2px solid var(--green);
+  }
+  .submit-btn {
+    width: 100%;
+    background: var(--saffron); color: var(--white);
+    border: none; border-radius: 10px;
+    padding: 13px; font-family: 'Baloo 2', cursive;
+    font-size: 1.1rem; font-weight: 800;
+    cursor: pointer; transition: background .15s;
+    margin-top: 4px;
+  }
+  .submit-btn:hover { background: #d96e0c; }
+  .cancel-link {
+    display: block; text-align: center; margin-top: 12px;
+    color: var(--muted); font-size: .85rem; cursor: pointer;
+    text-decoration: underline;
+  }
+
+  /* ── SUCCESS SCREEN ── */
+  .success-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 700;
+    background: var(--cream);
+    flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 30px;
+  }
+  .success-overlay.open { display: flex; }
+  .success-icon { font-size: 4rem; margin-bottom: 16px; animation: pop .4s .1s both; }
+  @keyframes pop {
+    from { transform: scale(0); }
+    to   { transform: scale(1); }
+  }
+  .success-overlay h2 {
+    font-family: 'Baloo 2', cursive; font-size: 1.5rem; font-weight: 800;
+    color: var(--green-d); margin-bottom: 10px;
+  }
+  .success-overlay p { color: var(--muted); margin-bottom: 22px; }
+  .wa-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #25d366; color: var(--white);
+    text-decoration: none; border-radius: 50px;
+    padding: 12px 28px; font-family: 'Baloo 2', cursive;
+    font-size: 1rem; font-weight: 700;
+    margin-bottom: 14px;
+    transition: background .15s;
+  }
+  .wa-btn:hover { background: #1ebe5b; }
+  .continue-btn {
+    background: var(--white); border: 2px solid var(--border);
+    border-radius: 50px; padding: 10px 24px;
+    font-family: 'Baloo 2', cursive; font-size: .95rem; font-weight: 700;
+    color: var(--ink); cursor: pointer; transition: border-color .15s;
+  }
+  .continue-btn:hover { border-color: var(--green); color: var(--green); }
+
+  /* ── FLOATING WHATSAPP ── */
+  .fab-wa {
+    position: fixed; bottom: 22px; right: 22px; z-index: 300;
+    background: #25d366;
+    width: 54px; height: 54px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 14px rgba(0,0,0,.25);
+    text-decoration: none; font-size: 1.6rem;
+    transition: transform .2s, background .15s;
+  }
+  .fab-wa:hover { background: #1ebe5b; transform: scale(1.1); }
+  .fab-wa-label {
+    position: absolute; right: 62px;
+    background: var(--ink); color: var(--white);
+    font-size: .75rem; padding: 4px 10px; border-radius: 6px;
+    white-space: nowrap; opacity: 0; pointer-events: none;
+    transition: opacity .2s;
+  }
+  .fab-wa:hover .fab-wa-label { opacity: 1; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center; padding: 20px;
+    font-size: .78rem; color: var(--muted);
+    margin-top: 30px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 85px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--ink); color: var(--white);
+    padding: 9px 20px; border-radius: 50px; font-size: .87rem;
+    opacity: 0; transition: all .25s; z-index: 800;
+    white-space: nowrap; pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* Responsive */
+  @media(min-width: 600px) {
+    .product-grid { grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 16px; }
+    .cart-drawer { border-radius: 0; height: 100vh; top: 0; bottom: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <h1>🛒 Mishra General Store</h1>
+      <p>Fresh groceries delivered to your door • Prayagraj</p>
+    </div>
+    <button class="cart-btn" onclick="openCart()">
+      🛒 Cart <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <h2>Your Local Kirana, Now Online!</h2>
+  <p>Order fresh groceries, dairy, snacks & more — delivered to your doorstep.</p>
+  <div class="badges">
+    <span class="badge">📦 Order on WhatsApp</span>
+    <span class="badge">🥛 Fresh Dairy Daily</span>
+    <span class="badge">⚡ Fast Delivery</span>
+  </div>
+</div>
+
+<!-- ── FILTER BAR ── -->
+<div class="filter-bar" id="filterBar">
+  <button class="filter-btn active" onclick="filterProducts('All', this)">All</button>
+  <button class="filter-btn" onclick="filterProducts('Groceries', this)">Groceries</button>
+  <button class="filter-btn" onclick="filterProducts('Dairy', this)">Dairy</button>
+  <button class="filter-btn" onclick="filterProducts('Snacks', this)">Snacks</button>
+  <button class="filter-btn" onclick="filterProducts('Beverages', this)">Beverages</button>
+  <button class="filter-btn" onclick="filterProducts('Electronics', this)">Electronics</button>
+</div>
+
+<!-- ── PRODUCTS ── -->
+<section class="products-section">
+  <p class="section-title" id="sectionTitle">All Products</p>
+  <div class="product-grid" id="productGrid"></div>
+  <div class="empty-state" id="emptyState">
+    <div class="icon">🔍</div>
+    <p>No products in this category yet.</p>
+  </div>
+</section>
+
+<footer>
+  ©️ 2024 Mishra General Store, Prayagraj &nbsp;|&nbsp;
+  📞 <a href="tel:+917905830598" style="color:var(--green)">7905830598</a> &nbsp;|&nbsp;
+  ✉️ <a href="mailto:raghavmishraghav794@gmail.com" style="color:var(--green)">raghavmishraghav794@gmail.com</a>
+</footer>
+
+<!-- ── FLOATING WHATSAPP ── -->
+<a class="fab-wa" href="https://wa.me/917905830598" target="_blank" rel="noopener" title="Chat on WhatsApp">
+  <span class="fab-wa-label">Chat on WhatsApp</span>
+  💬
+</a>
+
+<!-- ── CART DRAWER ── -->
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="drawer-header">
+    <h2>🛒 Your Cart</h2>
+    <button class="close-btn" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty" id="cartEmpty">
+      <div class="icon">🛒</div>
+      <p>Your cart is empty.<br>Add some products to get started!</p>
+    </div>
+  </div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="total-row">
+      <span>Grand Total</span>
+      <strong id="grandTotal">₹0</strong>
+    </div>
+    <button class="checkout-btn" onclick="openOrderModal()">📋 Place Order</button>
+  </div>
+</div>
+
+<!-- ── ORDER MODAL ── -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h2>📋 Place Your Order</h2>
+    <div class="order-summary-box" id="orderSummaryBox"></div>
+
+    <form id="orderForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+      <!-- Hidden fields for email content -->
+      <input type="hidden" name="_subject" id="emailSubject" value="New Order – Mishra General Store">
+      <input type="hidden" name="Order Summary" id="hiddenOrderSummary">
+      <input type="hidden" name="Grand Total" id="hiddenGrandTotal">
+
+      <div class="form-group">
+        <label>Your Name <span class="req">*</span></label>
+        <input type="text" name="Customer Name" id="custName" placeholder="e.g. Ramesh Kumar" required>
+      </div>
+      <div class="form-group">
+        <label>Phone Number <span class="req">*</span></label>
+        <input type="tel" name="Phone Number" id="custPhone" placeholder="e.g. 9876543210" required pattern="[6-9][0-9]{9}">
+      </div>
+      <div class="form-group">
+        <label>Delivery Address <span class="req">*</span></label>
+        <textarea name="Delivery Address" id="custAddress" placeholder="House no., Street, Area, Prayagraj" required></textarea>
+      </div>
+      <div class="form-group">
+        <label>Special Instructions <span class="em">(optional)</span></label>
+        <textarea name="Special Instructions" id="custInstructions" placeholder="e.g. Please deliver in the evening, leave at gate..."></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">✅ Confirm Order via Email</button>
+      <span class="cancel-link" onclick="closeOrderModal()">Cancel</span>
+    </form>
+  </div>
+</div>
+
+<!-- ── SUCCESS SCREEN ── -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-icon">🎉</div>
+  <h2>Order Placed Successfully!</h2>
+  <p>Thank you! <strong>Mishra General Store</strong> will contact you on WhatsApp<br>to confirm your order and delivery details.</p>
+  <a class="wa-btn" href="https://wa.me/917905830598" target="_blank" rel="noopener">
+    💬 Chat on WhatsApp
+  </a><br>
+  <button class="continue-btn" onclick="closeSuccess()">Continue Shopping</button>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ──────────────────────────────────────────────
+//  PRODUCT DATA
+// ──────────────────────────────────────────────
+const PRODUCTS = [
+  {
+    id: 1,
+    name: "Aashirvaad Atta (5kg)",
+    price: 280,
+    category: "Groceries",
+    image: "https://i.ibb.co/DH1ndNgw/IMG-3130.webp",
+    desc: "Premium whole wheat flour"
+  },
+  {
+    id: 2,
+    name: "Amul Butter (500g)",
+    price: 280,
+    category: "Dairy",
+    image: "https://i.ibb.co/8L1nhYwt/IMG-3131.png",
+    desc: "Fresh salted butter"
+  },
+  {
+    id: 3,
+    name: "Tata Salt (1kg)",
+    price: 28,
+    category: "Groceries",
+    image: "https://images.unsplash.com/photo-1633109741715-5b45e24a5e47?w=400&q=80",
+    desc: "Iodised vacuum evaporated salt"
+  },
+  {
+    id: 4,
+    name: "Amul Full Cream Milk (1L)",
+    price: 68,
+    category: "Dairy",
+    image: "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400&q=80",
+    desc: "Fresh full cream pasteurised milk"
+  },
+  {
+    id: 5,
+    name: "Lays Classic Chips",
+    price: 20,
+    category: "Snacks",
+    image: "https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=400&q=80",
+    desc: "Crispy salted potato chips"
+  },
+  {
+    id: 6,
+    name: "Parle-G Biscuits",
+    price: 10,
+    category: "Snacks",
+    image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&q=80",
+    desc: "Classic glucose biscuits, family pack"
+  },
+  {
+    id: 7,
+    name: "Coca-Cola (2L)",
+    price: 95,
+    category: "Beverages",
+    image: "https://images.unsplash.com/photo-1629203849820-f2f3c9733e23?w=400&q=80",
+    desc: "Chilled cold drink bottle"
+  },
+  {
+    id: 8,
+    name: "Tata Tea Premium (500g)",
+    price: 230,
+    category: "Beverages",
+    image: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80",
+    desc: "Rich aromatic Indian tea"
+  },
+  {
+    id: 9,
+    name: "Fortune Soyabean Oil (1L)",
+    price: 130,
+    category: "Groceries",
+    image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400&q=80",
+    desc: "Refined soyabean cooking oil"
+  },
+  {
+    id: 10,
+    name: "Paneer (200g)",
+    price: 80,
+    category: "Dairy",
+    image: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400&q=80",
+    desc: "Fresh soft cottage cheese"
+  },
+  {
+    id: 11,
+    name: "Boat Earphones",
+    price: 499,
+    category: "Electronics",
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80",
+    desc: "Wired bass earphones with mic"
+  },
+  {
+    id: 12,
+    name: "Kurkure Masala (90g)",
+    price: 20,
+    category: "Snacks",
+    image: "https://images.unsplash.com/photo-1622538113756-15f1e85fcfc5?w=400&q=80",
+    desc: "Tangy masala corn puffs"
+  }
+];
+
+// ──────────────────────────────────────────────
+//  CART STATE
+// ──────────────────────────────────────────────
+let cart = JSON.parse(localStorage.getItem('mgs_cart') || '[]');
+
+function saveCart() { localStorage.setItem('mgs_cart', JSON.stringify(cart)); }
+
+function getCartItem(id) { return cart.find(i => i.id === id); }
+
+function addToCart(id) {
+  const product = PRODUCTS.find(p => p.id === id);
+  const existing = getCartItem(id);
+  if (existing) {
+    existing.qty++;
+  } else {
+    cart.push({ id, name: product.name, price: product.price, image: product.image, qty: 1 });
+  }
+  saveCart();
+  updateCartUI();
+  showToast(`${product.name} added to cart!`);
+  // Flash button
+  const btn = document.getElementById(`btn-${id}`);
+  if (btn) {
+    btn.textContent = '✓ Added';
+    btn.classList.add('added');
+    setTimeout(() => { btn.textContent = 'Add to Cart'; btn.classList.remove('added'); }, 1000);
+  }
+}
+
+function changeQty(id, delta) {
+  const item = getCartItem(id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) removeItem(id);
+  else { saveCart(); renderCartItems(); updateCartCount(); }
+}
+
+function removeItem(id) {
+  cart = cart.filter(i => i.id !== id);
+  saveCart();
+  renderCartItems();
+  updateCartCount();
+}
+
+function getTotal() { return cart.reduce((s, i) => s + i.price * i.qty, 0); }
+
+function getTotalItems() { return cart.reduce((s, i) => s + i.qty, 0); }
+
+function updateCartCount() {
+  const n = getTotalItems();
+  document.getElementById('cartCount').textContent = n;
+}
+
+function updateCartUI() { updateCartCount(); renderCartItems(); }
+
+function renderCartItems() {
+  const container = document.getElementById('cartItems');
+  const footer    = document.getElementById('cartFooter');
+  const empty     = document.getElementById('cartEmpty');
+
+  if (cart.length === 0) {
+    empty.style.display = '';
+    footer.style.display = 'none';
+    container.innerHTML = '';
+    container.appendChild(empty);
+    return;
+  }
+
+  let html = '';
+  cart.forEach(item => {
+    html += `
+    <div class="cart-item">
+      <img src="${item.image}" alt="${item.name}" loading="lazy">
+      <div class="ci-info">
+        <div class="ci-name">${item.name}</div>
+        <div class="ci-price">₹${item.price} each</div>
+        <div class="ci-subtotal">₹${item.price * item.qty}</div>
+      </div>
+      <div class="qty-ctrl">
+        <button class="qty-btn" onclick="changeQty(${item.id}, -1)">−</button>
+        <span class="qty-num">${item.qty}</span>
+        <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+      </div>
+      <button class="remove-btn" onclick="removeItem(${item.id})" title="Remove">🗑</button>
+    </div>`;
+  });
+
+  empty.style.display = 'none';
+  container.innerHTML = html;
+  footer.style.display = '';
+  document.getElementById('grandTotal').textContent = `₹${getTotal()}`;
+}
+
+// ──────────────────────────────────────────────
+//  CART DRAWER
+// ──────────────────────────────────────────────
+function openCart() {
+  renderCartItems();
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('cartDrawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeCart() {
+  document.getElementById('overlay').classList.remove('open');
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ──────────────────────────────────────────────
+//  ORDER MODAL
+// ──────────────────────────────────────────────
+function openOrderModal() {
+  closeCart();
+  // Build summary box
+  let summaryHtml = '';
+  let summaryText = '';
+  cart.forEach(item => {
+    summaryHtml += `<div class="order-summary-line"><span>${item.name} × ${item.qty}</span><span>₹${item.price * item.qty}</span></div>`;
+    summaryText += `${item.name} × ${item.qty} = ₹${item.price * item.qty}\n`;
+  });
+  summaryHtml += `<div class="order-total-line"><span>Grand Total</span><span>₹${getTotal()}</span></div>`;
+  summaryText += `\nGrand Total: ₹${getTotal()}`;
+
+  document.getElementById('orderSummaryBox').innerHTML =
+    `<h3>Order Summary</h3>${summaryHtml}`;
+  document.getElementById('hiddenOrderSummary').value = summaryText;
+  document.getElementById('hiddenGrandTotal').value = `₹${getTotal()}`;
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeOrderModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ──────────────────────────────────────────────
+//  FORM SUBMISSION
+// ──────────────────────────────────────────────
+document.getElementById('orderForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  btn.textContent = '⏳ Placing order…';
+  btn.disabled = true;
+
+  const formData = new FormData(this);
+  try {
+    const res = await fetch(this.action, { method: 'POST', body: formData, headers: { Accept: 'application/json' } });
+    if (res.ok) {
+      cart = [];
+      saveCart();
+      updateCartCount();
+      closeOrderModal();
+      document.getElementById('successOverlay').classList.add('open');
+    } else {
+      throw new Error('Submission failed');
+    }
+  } catch {
+    // Fallback: open WhatsApp with order
+    const name    = document.getElementById('custName').value;
+    const phone   = document.getElementById('custPhone').value;
+    const address = document.getElementById('custAddress').value;
+    const notes   = document.getElementById('custInstructions').value;
+    let msg = `🛒 *New Order – Mishra General Store*\n\n`;
+    cart.forEach(i => { msg += `• ${i.name} × ${i.qty} = ₹${i.price * i.qty}\n`; });
+    msg += `\n*Total: ₹${getTotal()}*\n\n👤 ${name}\n📞 ${phone}\n📍 ${address}`;
+    if (notes) msg += `\n📝 ${notes}`;
+    const waUrl = `https://wa.me/917905830598?text=${encodeURIComponent(msg)}`;
+    window.open(waUrl, '_blank');
+    cart = [];
+    saveCart();
+    updateCartCount();
+    closeOrderModal();
+    document.getElementById('successOverlay').classList.add('open');
+  } finally {
+    btn.textContent = '✅ Confirm Order via Email';
+    btn.disabled = false;
+  }
+});
+
+function closeSuccess() {
+  document.getElementById('successOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ──────────────────────────────────────────────
+//  PRODUCT RENDERING & FILTERING
+// ──────────────────────────────────────────────
+let currentFilter = 'All';
+
+function renderProducts(filter = 'All') {
+  const grid = document.getElementById('productGrid');
+  const empty = document.getElementById('emptyState');
+  const title = document.getElementById('sectionTitle');
+
+  const filtered = filter === 'All' ? PRODUCTS : PRODUCTS.filter(p => p.category === filter);
+  title.textContent = filter === 'All' ? 'All Products' : filter;
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  grid.innerHTML = filtered.map(p => `
+    <div class="product-card" data-category="${p.category}">
+      <div class="product-img-wrap">
+        <img src="${p.image}" alt="${p.name}" loading="lazy">
+        <span class="cat-tag">${p.category}</span>
+      </div>
+      <div class="product-body">
+        <div class="product-name">${p.name}</div>
+        <div class="product-desc">${p.desc}</div>
+        <div class="product-price">₹${p.price}</div>
+        <button class="add-btn" id="btn-${p.id}" onclick="addToCart(${p.id})">Add to Cart</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterProducts(category, btn) {
+  currentFilter = category;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderProducts(category);
+}
+
+// ──────────────────────────────────────────────
+//  TOAST
+// ──────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ──────────────────────────────────────────────
+//  INIT
+// ──────────────────────────────────────────────
+renderProducts();
+updateCartCount();
+</script>
+</body>
+</html>
